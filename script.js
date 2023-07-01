@@ -2,15 +2,32 @@ let canvas = document.querySelector("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let ctx = canvas.getContext("2d");
+let maxRadius = 40;
+let minRadius = 4;
 let mouse = {
   x: undefined,
   y: undefined,
 };
-window.addEventListener("mousemove", (e) => {
-  mouse.x = e.x;
-  mouse.y = e.y;
+let bubbleLength ;
+if (window.innerWidth < 776) {
+  // mobile touch position
+  window.addEventListener("touchmove", (e) => {
+    mouse.x = e.changedTouches[0].clientX;
+    mouse.y = e.changedTouches[0].clientY;
+  });
+  bubbleLength = 400;
+  maxRadius = 30;
+} else {
+  window.addEventListener("mousemove", (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+  });
+  bubbleLength = 800;
+}
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 });
-
 //creating circle function
 function Circle(x, y, dx, dy, radius, color) {
   this.x = x;
@@ -43,11 +60,11 @@ function Circle(x, y, dx, dy, radius, color) {
       mouse.y - this.y < 50 &&
       mouse.y - this.y > -50
     ) {
-      if (this.radius < 40) {
-        this.radius += 1;
+      if (this.radius < maxRadius) {
+        this.radius += 4;
       }
-    } else if (this.radius > 2) {
-      this.radius -= 1;
+    } else if (this.radius > minRadius) {
+      this.radius -= 4;
     }
     this.draw();
   };
@@ -55,13 +72,13 @@ function Circle(x, y, dx, dy, radius, color) {
 //create empty array
 let circleArray = [];
 //creting multiple circle using loop
-for (let i = 0; i < 600; i++) {
-  let radius = Math.floor(Math.random() * 3);
+for (let i = 0; i < bubbleLength; i++) {
+  let radius = Math.floor(Math.random() * 5 + 2);
   let x = Math.random() * (canvas.width - radius * 2) + radius;
   let y = Math.random() * (canvas.height - radius * 2) + radius;
-  let dx = Math.floor((Math.random() - 0.5) * 3);
-  let dy = Math.floor((Math.random() - 0.5) * 3);
-  let Color = ["a", "b", "c", "d", "e", "f",0, 1, 2, 3, 4, 5, 6];
+  let dx = Math.floor(Math.random() - 0.5);
+  let dy = Math.floor(Math.random() - 0.5);
+  let Color = ["A", "B", "C", "D", "E", "F", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
   let randomColor = "#";
   for (let i = 0; i < 6; i++) {
     randomColor = randomColor + Math.floor(Math.random() * Color.length);
